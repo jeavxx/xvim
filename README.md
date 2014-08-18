@@ -2,8 +2,8 @@ XVIM 0.1.0
 ==========
 
 XVIM is a light wrapper around vim designed to make writing scripts extremely
-convenient, giving you a vim buffer that's already set up with a correct
-filetype and shebang line. It was especially designed for writing quick, experimental
+convenient. Xvim opens a vim buffer that's already set up with correct permissions,
+filetype, and a shebang line. It was especially designed for writing quick, experimental
 scripts.
 
 When you give xvim a filename, it will try and figure out its filetype and add the
@@ -23,6 +23,15 @@ out of the way file (by default it is located at /tmp/xvim) that allows for writ
 quick scripts to accomplish one off tasks or small experiments. The scratch file
 is assumed to be a shell script: if you wish to use a different language, invoke
 xvim with the -f flag.
+
+###Installation
+To install xvim, clone the repository and move the xvim-conf file to $HOME/.xvim. An
+install script with more flexibility about the location of the conf file will be
+included in 0.2.0.
+
+Xvim uses [docopts](https://github.com/docopt/docopts) for parsing command line
+arguments. If you haven't installed docopts already, you'll have to do so before
+you can use xvim.
 
 ###Basic usage:
 
