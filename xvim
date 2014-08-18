@@ -1,22 +1,19 @@
 #!/bin/bash
 read -rd '' usage <<EOF
 usage: xvim [--overwrite] [--filetype FILETYPE] [--shebang PATH]
-            [--vim-opts OPTSTRING] [--exec | --exec-with ARGS]
-            [--scratch | <filename>]
+            [--vim-opts OPTSTRING] [filename]
+       xvim --exec [<args>...]
        xvim --rm
        xvim --help
 
 options:
-  -b, --shebang PATH                specify a shebang line for the script
-  -e, --exec                        runs the script
-  -E, --exec-with ARGS              runs the script with the provided arguments
   -f, --filetype FILETYPE           explicitly pass a filetype for vim to use
-  -o, --overwrite                   overwrite existing files with the same name
-  -s, --scratch                     opens the current throwaway script (the default
-                                    if a filename isn't passed), or creates a new one
+  -b, --shebang PATH                specify a shebang line for the script
   -V, --vim-opts OPTSTRING          options to send to vim
+  -o, --overwrite                   overwrite existing files with the same name
+  -x, --exec                        runs the current scratch file
+  --rm                              removes the current scratch file
   -h, --help                        display this message
-  --rm                              removes the current throwaway script
 EOF
 eval "$(docopts -h "$usage" : "$@")"
 
