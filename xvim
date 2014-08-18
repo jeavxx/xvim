@@ -1,0 +1,84 @@
+#!/bin/bash
+read -rd '' usage <<EOF
+usage: xvim [--overwrite] [--filetype FILETYPE] [--shebang PATH]
+            [--vim-opts OPTSTRING] [--exec | --exec-with ARGS]
+            [--scratch | <filename>]
+       xvim --rm
+       xvim --help
+
+options:
+  -b, --shebang PATH                specify a shebang line for the script
+  -e, --exec                        runs the script
+  -E, --exec-with ARGS              runs the script with the provided arguments
+  -f, --filetype FILETYPE           explicitly pass a filetype for vim to use
+  -o, --overwrite                   overwrite existing files with the same name
+  -s, --scratch                     opens the current throwaway script (the default
+                                    if a filename isn't passed), or creates a new one
+  -V, --vim-opts OPTSTRING          options to send to vim
+  -h, --help                        display this message
+  --rm                              removes the current throwaway script
+EOF
+eval "$(docopts -h "$usage" : "$@")"
+
+XVIM_CONF="$HOME/.xvim"
+ftvars="$(cat $XVIM_CONF)"
+
+if [[ -z "$filename" ]];
+then
+    scratch="true"
+fi
+
+if [[ "$rm" == "true" || "$scratch" == "true" ]];
+then
+    filename="${XVIM_SCRATCH_FILE:-/tmp/xvim}"
+fi
+
+if [[ "$rm" == "true" ]];
+then
+    rm "$filename"
+    exit
+fi
+
+new_file="true"
+if [[ -f "$filename" && "$overwrite" == "false" ]];
+then
+    new_file="false"
+fi
+
+if [[ -z "$filetype" ]];
+then
+    ext="$(echo "$filename" | sed -nE 's/.*\.(.*)$/\1/p')"
+    ext=${ext:-'sh'}
+    varline=$(echo "$ftvars" | grep "ext=$ext")
+    eval "$varline"
+else
+    varline=$(echo "$ftvars" | grep "filetype=$filetype")
+    eval "$varline"
+fi
+
+if [[ "${shebang:0:2}" != "#!" ]];
+then
+    shebang="#!$shebang"
+fi
+
+skip_vim="false"
+if [[ ("$exec" == "true" || -n "$exec_with") && "$scratch" == "true" && "$new_file" == "false" ]];
+then
+    skip_vim="true"
+fi
+
+if [[ "$new_file" == "true" ]];
+then
+    echo "$shebang" > "$filename"
+    chmod +x "$filename"
+fi
+
+if [[ "$skip_vim" == "false" ]];
+then
+    vim -c "set filetype="$filetype"" $vim_opts "$filename"
+fi
+
+if [[ "$exec" == "true" || -n "$exec_with" ]];
+then
+    $filename $exec_with
+fi

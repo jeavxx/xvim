@@ -1,0 +1,7 @@
+ext=sed         filetype=sed            shebang=${shebang:-'#!/usr/bin/env sed -Ef'}
+ext=awk         filetype=awk            shebang=${shebang:-'#!/usr/bin/env awk -f'}
+ext=py          filetype=python         shebang=${shebang:-'#!/usr/bin/env python'}
+ext=rb          filetype=ruby           shebang=${shebang:-'#!/usr/bin/env ruby'}
+ext=js          filetype=javascript     shebang=${shebang:-'#!/usr/bin/env node'}
+ext=coffee      filetype=coffee         shebang=${shebang:-'#!/usr/bin/env coffee'}
+ext=sh          filetype=sh             shebang=${shebang:-'#!/bin/bash'}
